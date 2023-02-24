@@ -1,0 +1,71 @@
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
+
+
+const EditEmployee = () => {
+
+    let {id} = useParams()
+
+    let name = useRef()
+    let email = useRef()
+    let mobile = useRef()
+    let file = useRef()
+
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3009/Employees/${id}`)
+        .then(res => res.json())
+        .then((data) => {
+            name.current.value = data.name;
+            mobile.current.value = data.mobile;
+            email.current.value = data.email;
+        })
+
+    },[])
+
+   
+
+    let handleSubmit = (e) => {
+        e.preventDefault()
+
+        let updateuser = {
+            name:name.current.value,
+            email:email.current.value,
+            mobile:mobile.current.value,
+            file:file.current.value
+        }
+
+        fetch(`http://localhost:3009/Employees/${id}`,{
+            method:"PUT",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(updateuser)
+        })
+    }
+
+    return ( 
+        <div>
+            <form action="" onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="">Name</label>
+                    <input type="text" ref={name}/>
+                </div>
+                <div>
+                    <label htmlFor="">Email</label>
+                    <input type="email" ref={email}/>
+                </div>
+                <div>
+                    <label htmlFor="">Mobile</label>
+                    <input type="tel" ref={mobile} />
+                </div>
+                <div>
+                    <label htmlFor="">file</label>
+                    <input type="file" ref={file} />
+                </div>
+
+            </form>
+        </div>
+     );
+}
+ 
+export default EditEmployee
